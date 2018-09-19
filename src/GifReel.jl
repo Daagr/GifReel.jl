@@ -1,9 +1,10 @@
 module GifReel
 
-using FileIO
+using FileIO, Base64
 
 export showanimation, animate
 
+showanimation(imgv::Vector) = showanimation(cat(imgv..., dims=3))
 function showanimation(imgs)
 	buf = IOBuffer()
 	write(buf, "<img src=\"data:image/gif;base64,")
@@ -16,6 +17,6 @@ end
 
 showanimation(f::Function, frames) = showanimation([f(i) for i in 1:frames])
 
-animate(f; width=640, height=480, frames=20) = showanimation([f(x, y, t) for y in linspace(-1, 1, height), x in linspace(-width/height, width/height, width), t in linspace(0, 1, frames)])
+animate(f; width=640, height=480, frames=20) = showanimation([f(x, y, t) for y in range(-1, stop=1, length=height), x in range(-width/height, stop=width/height, length=width), t in range(0, stop=1, length=frames)])
 
 end # module
